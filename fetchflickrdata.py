@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 
-import  flickr_api
+import  flickrapi
+import yaml
 
 
 # TODO: Read from a yml file to get the keys
