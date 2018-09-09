@@ -4,15 +4,26 @@ import  flickrapi
 import yaml
 
 
-# TODO: Read from a yml file to get the keys
-apiKey='blah'
-apiSecret='boom'
+api_key='blah'
+api_secret='boom'
 
-flickr_api.set_keys(api_key = apiKey, api_secret = apiSecret)
+with open("./conf/flickrkeys.yaml", 'r') as stream:
+    try:
+        yamlDict = yaml.load(stream)
+        #print(yaml.dump(yamlDict))
+        api_key = yamlDict['api_key']
+        api_secret = yamlDict['api_secret']
+        print('Hey you!' + api_key + ' And you! ' + api_secret)
 
-username = 'crudmucosa'
-user = flickr_api.Person.findByUserName(username)
+    except yaml.YAMLError as exc:
+        print(exc)
 
-print(user)
-photos = user.getPublicPhotos()
-print(photos)
+flickr = flickrapi.FlickrAPI(api_key, api_secret, format='parsed-json')
+#51434786@N06 is mine! Thanks to https://www.flickr.com/services/api/explore/?method=flickr.people.getInfo
+sets   = flickr.photosets.getList(user_id='51434786@N06')
+title  = sets['photosets']['photoset'][1]['title']['_content']
+
+print('Second set title: %s' % title)
+print(sets['photosets']['photoset'][1])
+
+#TODO: Dump the data into json files
